@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {createSelector} from 'reselect';
 
 class MessageList extends React.Component {
 
@@ -40,13 +41,21 @@ class MessageList extends React.Component {
     }
 }
 
+const messagesListSelector = createSelector(
+    (messages) => messages.list,
+    (messages) => messages.searchAuthor,
+    (list, search) => {
+        return list.filter((message) => message.author === search)
+    }
+);
+
 function mapStateToProps(state){
     const { messages } = state;
 
-    const messageList = messages.list.filter((message) => message.author === messages.searchAuthor);
+    // const messageList = messages.list.filter((message) => message.author === messages.searchAuthor);
 
     return {
-        messageList,
+        messageList: messagesListSelector(messages),
     }
 }
 
